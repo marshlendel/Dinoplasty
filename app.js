@@ -17,7 +17,7 @@ const App = {
     };
 
     this.renderListItem(dino);
-    this.dinos.push(dino.name);
+    this.dinos.unshift(dino.name);
     console.log(this.dinos)
     this.max++;
 
@@ -27,7 +27,7 @@ const App = {
   renderListItem(dino) {
     const li = document.createElement("li");
     li.innerText = dino.name;
-    this.list.appendChild(li);
+    this.list.prepend(li);
   },
 };
 

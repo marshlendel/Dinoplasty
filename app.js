@@ -18,6 +18,7 @@ const App = {
 
     this.renderListItem(dino);
     this.dinos.push(dino.name);
+    console.log(this.dinos)
     this.max++;
 
     e.target.reset();

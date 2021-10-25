@@ -1,9 +1,10 @@
 const App = {
 
-    init(formSelector){ 
+    init(selectors){ 
         this.max = 0;
+        this.list = document.querySelector(selectors.listSelector)
         document
-        .querySelector(formSelector)
+        .querySelector(selectors.formSelector)
         .addEventListener("submit", this.addDino.bind(this))
     },
 
@@ -16,9 +17,18 @@ const App = {
 
         }
 
-        console.log(dino.name, dino.id)
+        this.renderListItem(dino)
         this.max ++
+    },
+
+    renderListItem(dino){
+        const li = document.createElement("li")
+        li.innerText = dino.name
+        this.list.appendChild(li)
     }
 }
 
-App.init("#dinoForm")
+App.init({
+    formSelector: "#dino-form",
+    listSelector: "#dino-list"
+})

@@ -18,7 +18,7 @@ const App = {
 
     this.renderListItem(dino);
     this.dinos.unshift(dino.name);
-    console.log(this.dinos)
+    console.log(this.dinos);
     this.max++;
 
     e.target.reset();
@@ -27,6 +27,7 @@ const App = {
   renderListItem(dino) {
     const li = document.createElement("li");
     li.innerText = dino.name;
+    li.dataset.id = dino.id;
     this.list.prepend(li);
   },
 };

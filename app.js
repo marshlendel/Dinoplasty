@@ -5,6 +5,7 @@ const App = {
     this.list = document.querySelector(selectors.listSelector);
     this.template = document.querySelector(selectors.templateSelector);
 
+    //Adding submit event listener to the form to run addDino when the app starts
     document
       .querySelector(selectors.formSelector)
       .addEventListener("submit", this.addDino.bind(this));
@@ -25,6 +26,19 @@ const App = {
     e.target.reset();
   },
 
+  removeDino(e) {
+    e.preventDefault();
+    const li = e.target.closest(".dino");
+    if (
+      li.nextElementSibling.classList.contains("template") &&
+      li.previousElementSibling
+    ) {
+      li.previousElementSibling.classList.remove("border-bottom-0");
+      li.previousElementSibling.classList.add("border-bottom");
+    }
+    li.remove();
+  },
+
   renderListItem(dino) {
     const li = this.template.cloneNode(true);
     li.classList.remove("template");
@@ -38,6 +52,11 @@ const App = {
     let dinoName = li.querySelector(".dino-name");
     dinoName.classList.add("flex-grow-1");
     dinoName.innerText = dino.name;
+
+    li.querySelector("button.remove").addEventListener(
+      "click",
+      this.removeDino
+    );
     this.list.prepend(li);
   },
 };

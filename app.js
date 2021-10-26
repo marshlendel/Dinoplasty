@@ -3,7 +3,7 @@ const App = {
     this.dinos = [];
     this.max = 0;
     this.list = document.querySelector(selectors.listSelector);
-    this.template = document.querySelector(selectors.templateSelector)
+    this.template = document.querySelector(selectors.templateSelector);
 
     document
       .querySelector(selectors.formSelector)
@@ -27,9 +27,17 @@ const App = {
 
   renderListItem(dino) {
     const li = this.template.cloneNode(true);
-    li.classList.remove("template")
+    li.classList.remove("template");
+    li.classList.add("d-flex", "p-2", "align-items-center");
+
+    document.querySelectorAll("li.dino")[1]
+      ? li.classList.add("border", "border-secondary", "border-bottom-0")
+      : li.classList.add("border", "border-secondary");
+
     li.dataset.id = dino.id;
-    li.querySelector(".dino-name").innerText = dino.name
+    let dinoName = li.querySelector(".dino-name");
+    dinoName.classList.add("flex-grow-1");
+    dinoName.innerText = dino.name;
     this.list.prepend(li);
   },
 };
@@ -37,5 +45,5 @@ const App = {
 App.init({
   formSelector: "#dino-form",
   listSelector: "#dino-list",
-  templateSelector: ".dino.template"
+  templateSelector: ".dino.template",
 });

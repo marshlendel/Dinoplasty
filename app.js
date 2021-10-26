@@ -20,16 +20,16 @@ const App = {
 
     this.renderListItem(dino);
     this.dinos.unshift(dino.name);
-    console.log(this.dinos);
     this.max++;
 
     e.target.reset();
   },
 
   renderListItem(dino) {
-    const li = document.createElement("li");
-    li.innerText = dino.name;
+    const li = this.template.cloneNode(true);
+    li.classList.remove("template")
     li.dataset.id = dino.id;
+    li.querySelector(".dino-name").innerText = dino.name
     this.list.prepend(li);
   },
 };

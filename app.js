@@ -9,6 +9,8 @@ const App = {
     document
       .querySelector(selectors.formSelector)
       .addEventListener("submit", this.addDino.bind(this));
+
+    this.loadDinos();
   },
 
   addDino(e) {
@@ -20,7 +22,7 @@ const App = {
 
     this.renderListItem(dino);
     this.dinos.unshift(dino.name);
-    this.saveDinos()
+    this.saveDinos();
     this.max++;
 
     e.target.reset();
@@ -29,7 +31,7 @@ const App = {
   removeDino(e) {
     e.preventDefault();
 
-    const li = e.target.closest(".dinoMem");
+    const li = e.target.closest(".dino");
     if (
       li.nextElementSibling.classList.contains("template") &&
       li.previousElementSibling
@@ -39,11 +41,25 @@ const App = {
     }
 
     this.dinos.splice(this.dinos.indexOf(li.firstElementChild.innerText), 1);
+    localStorage.setItem("dinos", JSON.stringify(this.dinos));
     li.remove();
   },
 
-  saveDinos(){
-    localStorage.setItem("dinos", JSON.stringify(this.dinos))
+  saveDinos() {
+    localStorage.setItem("dinos", JSON.stringify(this.dinos));
+  },
+
+  loadDinos() {
+    const savedDinos = JSON.parse(localStorage.getItem("dinos"));
+    savedDinos.reverse().forEach((dino) => {
+      const dinos = {
+        id: this.max + 1,
+        name: dino,
+      };
+      this.renderListItem(dinos);
+      this.dinos.unshift(dino);
+      this.max++;
+    });
   },
 
   renderListItem(dino) {

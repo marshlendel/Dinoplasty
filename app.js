@@ -18,11 +18,12 @@ const App = {
     const dino = {
       id: this.max + 1,
       name: e.target.dinoName.value,
+      fav: false,
     };
 
     this.renderListItem(dino);
-    this.dinos.unshift(dino.name);
-    this.saveDinos();
+    this.dinos.unshift(dino);
+    this.saveDinos(this.dinos);
     this.max++;
 
     e.target.reset();
@@ -40,36 +41,64 @@ const App = {
       li.previousElementSibling.classList.add("border-bottom");
     }
 
-    this.dinos.splice(this.dinos.indexOf(li.firstElementChild.innerText), 1);
-    localStorage.setItem("dinos", JSON.stringify(this.dinos));
+    this.dinos.forEach((obj, index) => {
+      if (obj.id == li.dataset.id) {
+        this.dinos.splice(index, 1);
+        this.saveDinos(this.dinos);
+      }
+    });
+
     li.remove();
   },
 
-  saveDinos() {
-    localStorage.setItem("dinos", JSON.stringify(this.dinos));
+  favDino(e) {
+    e.preventDefault();
+    const li = e.target.closest(".dino");
+    li.classList.toggle("bg-warning");
+    li.classList.toggle("border-secondary");
+    li.classList.toggle("border-danger");
+    this.dinos.forEach((obj) => {
+      if (obj.id == li.dataset.id) {
+        obj.fav == false ? (obj.fav = true) : (obj.fav = false);
+        this.saveDinos(this.dinos);
+      }
+    });
+  },
+
+  saveDinos(dino) {
+    localStorage.setItem("dinos", JSON.stringify(dino));
   },
 
   loadDinos() {
     const savedDinos = JSON.parse(localStorage.getItem("dinos"));
-    savedDinos.reverse().forEach((dino) => {
-      const dinos = {
-        id: this.max + 1,
-        name: dino,
-      };
-      this.renderListItem(dinos);
-      this.dinos.unshift(dino);
-      this.max++;
-    });
+    if (savedDinos.length) {
+      savedDinos.reverse().forEach((dinoObject) => {
+        const dino = {
+          name: dinoObject.name,
+          id: dinoObject.id,
+          fav: dinoObject.fav,
+        };
+        this.renderListItem(dino);
+        this.dinos.unshift(dino);
+        this.max++;
+      });
+    }
   },
 
   renderListItem(dino) {
     const li = this.template.cloneNode(true);
     li.classList.remove("template");
     li.classList.add("d-flex", "p-2", "align-items-center");
+    li.style.transition = "0.3s ease-in-out";
 
     document.querySelectorAll("li.dino")[1]
       ? li.classList.add("border", "border-secondary", "border-bottom-0")
       : li.classList.add("border", "border-secondary");
+
+    if (dino.fav === true) {
+      li.classList.remove("border-secondary");
+      li.classList.add("bg-warning", "border-danger");
+    }
 
     li.dataset.id = dino.id;
     let dinoName = li.querySelector(".dino-name");
@@ -79,6 +108,11 @@ const App = {
     li.querySelector("button.remove").addEventListener(
       "click",
       this.removeDino.bind(this)
+    );
+
+    li.querySelector("button.fav").addEventListener(
+      "click",
+      this.favDino.bind(this)
     );
     this.list.prepend(li);
   },

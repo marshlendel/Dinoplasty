@@ -13,14 +13,13 @@ const App = {
 
   addDino(e) {
     e.preventDefault();
-
     const dino = {
       id: this.max + 1,
       name: e.target.dinoName.value,
     };
 
     this.renderListItem(dino);
-    this.dinos.unshift(dino.name);
+    this.dinos.unshift(String(dino.id));
     this.max++;
 
     e.target.reset();
@@ -28,6 +27,7 @@ const App = {
 
   removeDino(e) {
     e.preventDefault();
+
     const li = e.target.closest(".dino");
     if (
       li.nextElementSibling.classList.contains("template") &&
@@ -36,6 +36,8 @@ const App = {
       li.previousElementSibling.classList.remove("border-bottom-0");
       li.previousElementSibling.classList.add("border-bottom");
     }
+
+    this.dinos.splice(this.dinos.indexOf(li.dataset.id), 1);
     li.remove();
   },
 
@@ -55,7 +57,7 @@ const App = {
 
     li.querySelector("button.remove").addEventListener(
       "click",
-      this.removeDino
+      this.removeDino.bind(this)
     );
     this.list.prepend(li);
   },

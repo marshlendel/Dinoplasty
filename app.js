@@ -19,7 +19,8 @@ const App = {
     };
 
     this.renderListItem(dino);
-    this.dinos.unshift(String(dino.id));
+    this.dinos.unshift(dino.name);
+    this.saveDinos()
     this.max++;
 
     e.target.reset();
@@ -28,7 +29,7 @@ const App = {
   removeDino(e) {
     e.preventDefault();
 
-    const li = e.target.closest(".dino");
+    const li = e.target.closest(".dinoMem");
     if (
       li.nextElementSibling.classList.contains("template") &&
       li.previousElementSibling
@@ -37,8 +38,12 @@ const App = {
       li.previousElementSibling.classList.add("border-bottom");
     }
 
-    this.dinos.splice(this.dinos.indexOf(li.dataset.id), 1);
+    this.dinos.splice(this.dinos.indexOf(li.firstElementChild.innerText), 1);
     li.remove();
+  },
+
+  saveDinos(){
+    localStorage.setItem("dinos", JSON.stringify(this.dinos))
   },
 
   renderListItem(dino) {

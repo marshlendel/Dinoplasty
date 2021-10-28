@@ -50,6 +50,8 @@ const App = {
   },
 
   favDino(e) {
+    e.currentTarget.classList.toggle("btn-primary");
+    e.currentTarget.classList.toggle("btn-warning");
     const li = e.target.closest(".dino");
     li.classList.toggle("bg-warning");
     li.classList.toggle("border-secondary");
@@ -135,11 +137,11 @@ const App = {
     }
   },
 
-  saveOnEnter(dino, e){
+  saveOnEnter(dino, e) {
     const button = e.target.nextElementSibling.querySelector(".edit");
     const icon = button.querySelector(".bi");
     if (e.target.isContentEditable) {
-      if(e.keyCode === 13) {
+      if (e.keyCode === 13) {
         button.classList.toggle("btn-success");
         button.classList.toggle("btn-primary");
         icon.classList.toggle("bi-pencil");
@@ -148,7 +150,7 @@ const App = {
         dino.name = e.target.innerText;
         this.saveDinos(this.dinos);
       }
-    } 
+    }
   },
 
   saveDinos(dino) {
@@ -185,6 +187,8 @@ const App = {
       : li.classList.add("border", "border-secondary");
 
     if (dino.fav === true) {
+      let button = li.querySelector(".fav");
+      button.classList.toggle("btn-warning");
       li.classList.remove("border-secondary");
       li.classList.add("bg-warning", "border-danger");
     }
@@ -192,6 +196,7 @@ const App = {
     li.dataset.id = dino.id;
     let dinoName = li.querySelector(".dino-name");
     dinoName.classList.add("flex-grow-1");
+    dinoName.setAttribute("title", dino.name);
     dinoName.innerText = dino.name;
 
     li.querySelector("button.remove").addEventListener(
@@ -219,7 +224,10 @@ const App = {
       this.edit.bind(this, dino)
     );
 
-    li.querySelector(".dino-name").addEventListener("keypress", this.saveOnEnter.bind(this, dino))
+    li.querySelector(".dino-name").addEventListener(
+      "keypress",
+      this.saveOnEnter.bind(this, dino)
+    );
     this.list.prepend(li);
   },
 };

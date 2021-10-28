@@ -30,8 +30,6 @@ const App = {
   },
 
   removeDino(e) {
-    e.preventDefault();
-
     const li = e.target.closest(".dino");
     if (
       li.nextElementSibling.classList.contains("template") &&
@@ -52,7 +50,6 @@ const App = {
   },
 
   favDino(e) {
-    e.preventDefault();
     const li = e.target.closest(".dino");
     li.classList.toggle("bg-warning");
     li.classList.toggle("border-secondary");
@@ -65,11 +62,65 @@ const App = {
     });
   },
 
+  moveUp(e) {
+    const li = e.target.closest(".dino");
+    const lastLi = this.list.lastElementChild.previousElementSibling;
+    const previousLi = li.previousElementSibling;
+
+    if (previousLi) {
+      this.list.insertBefore(li, previousLi);
+
+      this.dinos.forEach((obj, index) => {
+        if (obj.id == li.dataset.id) {
+          this.dinos.splice(index, 1);
+          this.dinos.splice(index - 1, 0, obj);
+          this.saveDinos(this.dinos);
+        }
+      });
+
+      if (li === lastLi) {
+        li.classList.add("border-bottom-0");
+        previousLi.classList.remove("border-bottom-0");
+      }
+    }
+  },
+
+  moveDown(e) {
+    const li = e.target.closest(".dino");
+    const lastLi = this.list.lastElementChild.previousElementSibling;
+    const secondLast =
+      this.list.lastElementChild.previousElementSibling.previousElementSibling;
+    const nextLi = li.nextElementSibling;
+    let object;
+    let i;
+    if (
+      !li.nextElementSibling.classList.contains("template") &&
+      li.nextElementSibling
+    ) {
+      this.list.insertBefore(li.nextElementSibling, li);
+      this.dinos.forEach((obj, index) => {
+        if (obj.id == li.dataset.id) {
+          object = obj;
+          i = index;
+        }
+      });
+      this.dinos.splice(i, 1);
+      this.dinos.splice(i + 1, 0, object);
+      this.saveDinos(this.dinos);
+
+      if (li === secondLast) {
+        li.classList.remove("border-bottom-0");
+        nextLi.classList.add("border-bottom-0");
+      }
+    }
+  },
+
   saveDinos(dino) {
     localStorage.setItem("dinos", JSON.stringify(dino));
   },
 
   loadDinos() {
+    const ids = [];
     const savedDinos = JSON.parse(localStorage.getItem("dinos"));
     if (savedDinos.length) {
       savedDinos.reverse().forEach((dinoObject) => {
@@ -78,10 +129,12 @@ const App = {
           id: dinoObject.id,
           fav: dinoObject.fav,
         };
+        ids.push(dino.id);
         this.renderListItem(dino);
         this.dinos.unshift(dino);
-        this.max++;
       });
+      const highId = Math.max(...ids);
+      this.max = highId;
     }
   },
 
@@ -113,6 +166,16 @@ const App = {
     li.querySelector("button.fav").addEventListener(
       "click",
       this.favDino.bind(this)
+    );
+
+    li.querySelector("button.up").addEventListener(
+      "click",
+      this.moveUp.bind(this)
+    );
+
+    li.querySelector("button.down").addEventListener(
+      "click",
+      this.moveDown.bind(this)
     );
     this.list.prepend(li);
   },

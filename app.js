@@ -117,6 +117,12 @@ const App = {
   edit(dino, e) {
     const li = e.target.closest(".dino");
     const dinoText = li.firstElementChild;
+    const button = e.currentTarget
+    const icon = button.querySelector(".bi")
+    button.classList.toggle("btn-primary")
+    button.classList.toggle("btn-success")
+    icon.classList.toggle("bi-pencil")
+    icon.classList.toggle("bi-check-lg")
 
     if (dinoText.isContentEditable) {
       dinoText.contentEditable = false;
@@ -124,6 +130,7 @@ const App = {
       this.saveDinos(this.dinos);
     } else {
       dinoText.contentEditable = true;
+
       dinoText.focus();
     }
   },

@@ -117,12 +117,12 @@ const App = {
   edit(dino, e) {
     const li = e.target.closest(".dino");
     const dinoText = li.firstElementChild;
-    const button = e.currentTarget
-    const icon = button.querySelector(".bi")
-    button.classList.toggle("btn-primary")
-    button.classList.toggle("btn-success")
-    icon.classList.toggle("bi-pencil")
-    icon.classList.toggle("bi-check-lg")
+    const button = e.currentTarget;
+    const icon = button.querySelector(".bi");
+    button.classList.toggle("btn-primary");
+    button.classList.toggle("btn-success");
+    icon.classList.toggle("bi-pencil");
+    icon.classList.toggle("bi-check-lg");
 
     if (dinoText.isContentEditable) {
       dinoText.contentEditable = false;
@@ -133,6 +133,22 @@ const App = {
 
       dinoText.focus();
     }
+  },
+
+  saveOnEnter(dino, e){
+    const button = e.target.nextElementSibling.querySelector(".edit");
+    const icon = button.querySelector(".bi");
+    if (e.target.isContentEditable) {
+      if(e.keyCode === 13) {
+        button.classList.toggle("btn-success");
+        button.classList.toggle("btn-primary");
+        icon.classList.toggle("bi-pencil");
+        icon.classList.toggle("bi-check-lg");
+        e.target.contentEditable = false;
+        dino.name = e.target.innerText;
+        this.saveDinos(this.dinos);
+      }
+    } 
   },
 
   saveDinos(dino) {
@@ -202,6 +218,8 @@ const App = {
       "click",
       this.edit.bind(this, dino)
     );
+
+    li.querySelector(".dino-name").addEventListener("keypress", this.saveOnEnter.bind(this, dino))
     this.list.prepend(li);
   },
 };

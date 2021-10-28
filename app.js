@@ -87,7 +87,6 @@ const App = {
 
   moveDown(e) {
     const li = e.target.closest(".dino");
-    const lastLi = this.list.lastElementChild.previousElementSibling;
     const secondLast =
       this.list.lastElementChild.previousElementSibling.previousElementSibling;
     const nextLi = li.nextElementSibling;
@@ -112,6 +111,20 @@ const App = {
         li.classList.remove("border-bottom-0");
         nextLi.classList.add("border-bottom-0");
       }
+    }
+  },
+
+  edit(dino, e) {
+    const li = e.target.closest(".dino");
+    const dinoText = li.firstElementChild;
+
+    if (dinoText.isContentEditable) {
+      dinoText.contentEditable = false;
+      dino.name = dinoText.innerText;
+      this.saveDinos(this.dinos);
+    } else {
+      dinoText.contentEditable = true;
+      dinoText.focus();
     }
   },
 
@@ -176,6 +189,11 @@ const App = {
     li.querySelector("button.down").addEventListener(
       "click",
       this.moveDown.bind(this)
+    );
+
+    li.querySelector("button.edit").addEventListener(
+      "click",
+      this.edit.bind(this, dino)
     );
     this.list.prepend(li);
   },

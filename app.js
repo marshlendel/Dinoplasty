@@ -1,5 +1,5 @@
-const App = {
-  init(selectors) {
+class App {
+  constructor(selectors) {
     this.dinos = [];
     this.max = 0;
     this.list = document.querySelector(selectors.listSelector);
@@ -11,7 +11,7 @@ const App = {
       .addEventListener("submit", this.addDino.bind(this));
 
     this.loadDinos();
-  },
+  }
 
   addDino(e) {
     e.preventDefault();
@@ -27,7 +27,7 @@ const App = {
     this.max++;
 
     e.target.reset();
-  },
+  }
 
   removeDino(e) {
     const li = e.target.closest(".dino");
@@ -47,7 +47,7 @@ const App = {
     });
 
     li.remove();
-  },
+  }
 
   favDino(e) {
     e.currentTarget.classList.toggle("btn-primary");
@@ -62,7 +62,7 @@ const App = {
         this.saveDinos(this.dinos);
       }
     });
-  },
+  }
 
   moveUp(e) {
     const li = e.target.closest(".dino");
@@ -85,7 +85,7 @@ const App = {
         previousLi.classList.remove("border-bottom-0");
       }
     }
-  },
+  }
 
   moveDown(e) {
     const li = e.target.closest(".dino");
@@ -114,7 +114,7 @@ const App = {
         nextLi.classList.add("border-bottom-0");
       }
     }
-  },
+  }
 
   edit(dino, e) {
     const li = e.target.closest(".dino");
@@ -135,7 +135,7 @@ const App = {
 
       dinoText.focus();
     }
-  },
+  }
 
   saveOnEnter(dino, e) {
     const button = e.target.nextElementSibling.querySelector(".edit");
@@ -151,11 +151,11 @@ const App = {
         this.saveDinos(this.dinos);
       }
     }
-  },
+  }
 
   saveDinos(dino) {
     localStorage.setItem("dinos", JSON.stringify(dino));
-  },
+  }
 
   loadDinos() {
     const ids = [];
@@ -174,7 +174,7 @@ const App = {
       const highId = Math.max(...ids);
       this.max = highId;
     }
-  },
+  }
 
   renderListItem(dino) {
     const li = this.template.cloneNode(true);
@@ -229,10 +229,10 @@ const App = {
       this.saveOnEnter.bind(this, dino)
     );
     this.list.prepend(li);
-  },
+  }
 };
 
-App.init({
+new App({
   formSelector: "#dino-form",
   listSelector: "#dino-list",
   templateSelector: ".dino.template",
